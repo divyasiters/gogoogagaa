@@ -31,6 +31,7 @@
                                 <strong>Add Category</strong> <small> (for product)</small>
                             </div>
                             <form method="post" action="{{ route('categories.store') }}">
+                                @csrf
                             <div class="card-body card-block">
                                 <div class="form-group">
                                     <label class=" form-control-label">Select Parent Category</label>

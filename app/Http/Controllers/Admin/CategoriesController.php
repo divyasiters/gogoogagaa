@@ -63,24 +63,25 @@ class CategoriesController extends Controller
             $fileName = $request->file('category_image')->move(config('image.category_image_path'), $image);
 
         } else {
-            return redirect('admin/bussiness/category/create')->with('Error', 'Category image is not uploaded. Please try again');
+            flash('Category Image is not uploaded.Please try again.')->error();
+            return redirect()->back();
         }
 
-        $input = $request->input();
-        $input['image'] = $image;
-        $category = array_intersect_key($input, BussinessCategory::$updatable);
-        try{
+        $data['image'] = $image;
+        if  (empty($data['slug'])) {
+            $data['slug'] = str_slug($data['name']);
+        }
+        try {
 
-            $category = new BussinessCategory($category);
-
-            $category->slug = Helper::slug($input['title'], $category->id);
+            $category = new Category();
+            $category->fill($data);
             $category->save();
+            flash('New Category created successfully.')->success();
+            return redirect('categories.index');
 
-            return redirect('admin/bussiness/category')->with('success', 'New Bussiness category created successfully');
-
-        }catch(Exception $e)
-        {
-            return redirect('admin/bussiness/category/create')->with('error', $e->getMessage());
+        } catch(Exception $e) {
+            flash($e->getMessage())->error();
+            return redirect('categories.store');
         }
     }
 
