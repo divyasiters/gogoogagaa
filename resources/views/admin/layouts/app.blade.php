@@ -20,6 +20,7 @@
     @auth
         @include('admin.includes.left-menu')
         @include('admin.includes.header')
+        @include('flash::message')
     @endauth
         @yield('content')
     </div>
